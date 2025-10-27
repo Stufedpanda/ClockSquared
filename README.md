@@ -16,7 +16,7 @@ Each digit is rendered using a grid of 4x6 analog clocks, duplicated 6 times to 
 
 ## 💻 Usage
 
-Open with browser, as with any html file.
+Open with browser, as with any html file, or try the live demo above.
 
 ## 📄 License
 
