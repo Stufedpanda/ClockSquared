@@ -2,7 +2,7 @@
 
 A digital clock that portrays the current time in 24hr format, made up of smaller analog clocks.
 
-🔗 **Live Demo:** [stufedpanda.github.io/clock-of-clocks](https://forbesli.github.io/clock-of-clocks/)
+🔗 **Live Demo:** [ClockSquared](https://stufedpanda.github.io/ClockSquared/)
 
 ## ✨ Features
 - Real Time Display
