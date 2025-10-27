@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock</title>
+    <style>
+
+        :root {
+            --bg: #0b0c10;
+            --clock-bg: #121317;
+            --hand-color: #00f5d4;
+            --accent: #ff006e;
+            --separator-color: var(--hand-color);
+        }
+
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            /* place-items: center;  */
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .clock {
+            aspect-ratio: 1 / 1;
+            background-color: var(--clock-bg);
+            border-radius: 50%;
+            position: relative;
+            width: 100%;
+        }
+        .hand {
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            width: 8%;
+            height: 45%;
+            background-color: var(--hand-color);
+            transform-origin: bottom center;  
+            transform: translate(-50%, -100%);
+            transition: transform 400ms ease;
+            border-radius: 999px;
+        }
+        .digit {
+            display: grid;
+            width: clamp(10vmin, 13vw, 16vmin);
+            height: auto;
+            grid-template: repeat(6, 1fr) / repeat(4, 1fr);
+            gap: 0.125rem
+        }
+    </style>
+</head>
+<body>
+    <div class="digitalClock" style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+        <div class="digit" id="digit"></div>
+        <div class="digit" id="digit"></div>
+
+        <div class="separator" style="font-size: 10vmin; color: var(--separator-color);">:</div>
+
+        <div class="digit" id="digit"></div>
+        <div class="digit" id="digit"></div>
+
+        <div class="separator" style="font-size: 10vmin; color: var(--separator-color);">:</div>
+
+        <div class="digit" id="digit"></div>
+        <div class="digit" id="digit"></div>
+    </div>
+
+    <script>
+        const digitEls = Array.from(document.querySelectorAll('.digit'));
+        const Clocks = digitEls.map(container => {
+            const tempClocks = [];
+            for (let i = 0; i < 24; i++){
+                const clock = document.createElement('div');
+                clock.classList.add("clock");
+
+                const hand1 = document.createElement('div');
+                hand1.classList.add("hand");
+
+                const hand2 = document.createElement('div');
+                hand2.classList.add("hand");
+
+                clock.appendChild(hand1);
+                clock.appendChild(hand2);
+                container.appendChild(clock);
+
+                tempClocks.push([hand1, hand2]);
+            }
+            return tempClocks;
+        })
+
+        digits = {
+            "0": [
+                "┌", "―", "―", "┐",
+                "│", "┌", "┐", "│",
+                "│", "│", "│", "│",
+                "│", "│", "│", "│",
+                "│", "└", "┘", "│",
+                "└", "―", "―", "┘",
+            ],
+            "1": [
+                "┌", "―", "┐", "/",
+                "└", "┐", "│", "/",
+                "/", "│", "│", "/",
+                "/", "│", "│", "/",
+                "┌", "┘", "└", "┐",
+                "└", "―", "―", "┘",
+            ],
+            "2": [
+                "┌", "―", "―", "┐",
+                "└", "―", "┐", "│",
+                "┌", "―", "┘", "│",
+                "│", "┌", "―", "┘",
+                "│", "└", "―", "┐",
+                "└", "―", "―", "┘",
+            ],
+            "3": [
+                "┌", "―", "―", "┐",
+                "└", "―", "┐", "│",
+                "/", "┌", "┘", "│",
+                "/", "└", "┐", "│",
+                "┌", "―", "┘", "│",
+                "└", "―", "―", "┘",
+            ],
+            "4": [
+                "┌", "┐", "┌", "┐",
+                "│", "│", "│", "│",
+                "│", "└", "┘", "│",
+                "└", "―", "┐", "│",
+                "/", "/", "│", "│",
+                "/", "/", "└", "┘",
+            ],
+            "5": [
+                "┌", "―", "―", "┐",
+                "│", "┌", "―", "┘",
+                "│", "└", "―", "┐",
+                "└", "―", "┐", "│",
+                "┌", "―", "┘", "│",
+                "└", "―", "―", "┘",
+            ],
+            "6": [
+                "┌", "―", "―", "┐",
+                "│", "┌", "―", "┘",
+                "│", "└", "―", "┐",
+                "│", "┌", "┐", "│",
+                "│", "└", "┘", "│",
+                "└", "―", "―", "┘",
+            ],
+            "7": [
+                "┌", "―", "―", "┐",
+                "└", "―", "┐", "│",
+                "/", "/", "│", "│",
+                "/", "/", "│", "│",
+                "/", "/", "│", "│",
+                "/", "/", "└", "┘",
+            ],
+            "8": [
+                "┌", "―", "―", "┐",
+                "│", "┌", "┐", "│",
+                "│", "└", "┘", "│",
+                "│", "┌", "┐", "│",
+                "│", "└", "┘", "│",
+                "└", "―", "―", "┘",
+            ],
+            "9": [
+                "┌", "―", "―", "┐",
+                "│", "┌", "┐", "│",
+                "│", "└", "┘", "│",
+                "└", "―", "┐", "│",
+                "┌", "―", "┘", "│",
+                "└", "―", "―", "┘",
+            ]
+        }
+        const angles = {
+            "└" : [  0,  90],
+            "┌" : [ 90, 180],
+            "┐" : [180, 270],
+            "┘" : [  0, 270],
+            "―" : [90, 270],
+            "│" : [0, 180], 
+            "/" : [135, 135],
+        };
+
+        function setSymbol(hands, sym) {
+        const [a, b] = angles[sym] || [0, 0];
+        hands[0].style.transform = `translate(-50%, -100%) rotate(${a}deg)`;
+        hands[1].style.transform = `translate(-50%, -100%) rotate(${b}deg)`;
+        }
+
+        function renderDigit(clocks, symbols) {
+            for (let i = 0; i < 24; i++) {
+                setSymbol(clocks[i], symbols[i]);
+            }
+        }
+
+        function getCurrentTime() {
+            const time = new Date()
+            const h = time.getHours();
+            const m = time.getMinutes();
+            const s = time.getSeconds();
+
+            const hh = h.toString().padStart(2, "0");
+            const mm = m.toString().padStart(2, "0");
+            const ss = s.toString().padStart(2, "0");
+
+            return { hh, mm, ss };
+        }
+
+        function updateClock() {
+            const { hh, mm, ss} = getCurrentTime();
+            const str = hh + mm + ss;
+
+            for (let i = 0; i < 6; i++) {
+                const symbolArray = digits[str[i]];
+                renderDigit(Clocks[i], symbolArray);
+            }
+        }
+        // initial render
+        updateClock();
+
+        // update every second
+        setInterval(updateClock, 1000);
+
+    </script>
+</body> 
+</html>
